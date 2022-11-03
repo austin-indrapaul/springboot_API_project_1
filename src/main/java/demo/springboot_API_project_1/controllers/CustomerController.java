@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,22 +23,31 @@ public class CustomerController {
 	CustomerRepository repository;
 
 	@GetMapping("/customers")
-	public List<Customer> getCustomers() {
-		return repository.findAll();
+	public ResponseEntity<?> getCustomers() {
+		List<Customer> customers = repository.findAll();
+		if (customers != null)
+			return new ResponseEntity<List<Customer>>(customers, HttpStatus.ACCEPTED);
+		else {
+			return new ResponseEntity<String>("no records found", HttpStatus.NO_CONTENT);
+		}
 	}
 
 	@PostMapping("/customer")
 	public ResponseEntity<?> addCustomer(@RequestBody Customer customer) {
 		try {
-			return ResponseEntity.ok(repository.save(customer));
+			return new ResponseEntity<String>("User successfully registered", HttpStatus.CREATED);
 		} catch (Exception ex) {
 			return ResponseEntity.badRequest().body("invalid key or value..\n" + ex.getMessage());
 		}
 	}
 
 	@GetMapping("/customer/{id}")
-	public Optional<Customer> get_user(@PathVariable int id) {
-		return repository.findById(id);
+	public ResponseEntity<?> get_user(@PathVariable int id) {
+		Optional<Customer> customer = repository.findById(id);
+		if (customer.isPresent()) {
+			return ResponseEntity.ok(customer.get());
+		}
+		return ResponseEntity.badRequest().body("Customer not found");
 	}
 
 	@PutMapping("/customer/{id}")
