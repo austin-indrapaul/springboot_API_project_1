@@ -21,6 +21,10 @@ public class HomeController {
 		urls.put("Homepage", "http://localhost:8080/home");
 		urls.put("Dashboard", "http://localhost:8080/dashboard");
 		urls.put("List of all customers", "http://localhost:8080/customers");
+		urls.put("Read a paticular customers", "http://localhost:8080/customer/1");
+		urls.put("Create new customer", "http://localhost:8080/customer");
+		urls.put("Update a customer", "http://localhost:8080/customer/1");
+		urls.put("Delete a customer", "http://localhost:8080/customer/1");
 
 		return urls;
 	}
